@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>El Gordo, la probabilidad</title>
+<meta name="description" content="Las probabilidades de la Lotería de Navidad, dibujadas a una escala que se siente." data-i18n-attr="content:meta.desc">
+<meta name="theme-color" content="#0A0F1A">
+<meta property="og:title" content="El Gordo, la probabilidad">
+<meta property="og:description" content="Las probabilidades de la Lotería de Navidad, dibujadas a una escala que se siente.">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="assets/fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/css/site.css">
+<script type="module" src="assets/js/app.js"></script>
+</head>
+<body data-title-key="meta.title">
+<a class="skip" href="#main" data-i18n="skip">Saltar al contenido</a>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="./" data-i18n="brand">El Gordo, la probabilidad</a>
+    <div class="seg" role="group" aria-label="Idioma" data-i18n-attr="aria-label:lang.label">
+      <button type="button" data-lang="es" aria-pressed="true">ES</button>
+      <button type="button" data-lang="en" aria-pressed="false">EN</button>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- Layer 1 · your ticket -->
+    <section class="hero" aria-labelledby="t-hero">
+      <div class="box drum-box">
+        <svg viewBox="0 0 360 340" role="img" id="drum" aria-label="">
+          <defs>
+            <pattern id="balls" width="9" height="9" patternUnits="userSpaceOnUse">
+              <circle cx="4.5" cy="4.5" r="3.4" fill="#33436A"></circle>
+              <circle cx="3.6" cy="3.6" r="1" fill="#536592"></circle>
+            </pattern>
+            <clipPath id="inside"><circle cx="180" cy="150" r="124"></circle></clipPath>
+          </defs>
+          <line x1="40" y1="150" x2="320" y2="150" stroke="#283550" stroke-width="5" stroke-linecap="round"></line>
+          <line x1="48" y1="150" x2="30" y2="282" stroke="#283550" stroke-width="4" stroke-linecap="round"></line>
+          <line x1="312" y1="150" x2="330" y2="282" stroke="#283550" stroke-width="4" stroke-linecap="round"></line>
+          <g id="cage">
+            <rect x="52" y="22" width="256" height="256" fill="url(#balls)" clip-path="url(#inside)"></rect>
+            <g fill="none" stroke="#8090B5" stroke-width="1.5">
+              <circle cx="180" cy="150" r="126"></circle>
+              <ellipse cx="180" cy="150" rx="92" ry="126"></ellipse>
+              <ellipse cx="180" cy="150" rx="46" ry="126"></ellipse>
+              <line x1="180" y1="24" x2="180" y2="276"></line>
+              <ellipse cx="180" cy="150" rx="126" ry="42"></ellipse>
+              <ellipse cx="180" cy="100" rx="114" ry="23"></ellipse>
+              <ellipse cx="180" cy="200" rx="114" ry="23"></ellipse>
+            </g>
+          </g>
+          <circle cx="180" cy="150" r="9" fill="#0A0F1A" stroke="#8090B5" stroke-width="2"></circle>
+          <g id="yourBall">
+            <circle r="4.4" fill="#FF7A3D"></circle>
+            <circle r="12" fill="none" stroke="#FF7A3D" stroke-width="2"></circle>
+          </g>
+          <line id="leader" stroke="#FF7A3D" stroke-width="2"></line>
+          <g id="tag">
+            <rect x="-41" y="-15" width="82" height="30" rx="8" fill="#0A0F1A" stroke="#FF7A3D" stroke-width="2"></rect>
+            <text id="tagText" y="5.5" fill="#FF7A3D" font-family="Spline Sans Mono, monospace" font-size="15" font-weight="600" text-anchor="middle">00000</text>
+          </g>
+          <line x1="8" y1="314" x2="352" y2="314" stroke="#8090B5" stroke-width="1.5"></line>
+          <g fill="#536592">
+            <circle cx="30" cy="314" r="9"></circle><circle cx="52" cy="314" r="9"></circle><circle cx="74" cy="314" r="9"></circle>
+            <circle cx="96" cy="314" r="9"></circle><circle cx="118" cy="314" r="9"></circle><circle cx="140" cy="314" r="9"></circle>
+          </g>
+          <circle cx="330" cy="314" r="9" fill="#101828" stroke="#FF7A3D" stroke-width="2" stroke-dasharray="3 3"></circle>
+          <text x="310" y="336" fill="#9AA6BD" font-family="Spline Sans Mono, monospace" font-size="11" text-anchor="end">22 · 12 · 2026</text>
+        </svg>
+      </div>
+      <div class="box ticket">
+        <p class="kicker" data-i18n="hero.kicker">Sorteo de Navidad · 22 de diciembre de 2026</p>
+        <h1 id="t-hero" data-i18n="hero.title">100.000 bolas dentro. Sale una.</h1>
+        <p class="lead" data-i18n="hero.lead">Escribe tu número, o pide uno al azar, y mira dónde cae entre todos los demás.</p>
+        <div class="field-wrap">
+          <label for="num" class="field-label" data-i18n="hero.input">Tu número</label>
+          <div class="field">
+            <input id="num" type="text" inputmode="numeric" pattern="[0-9]{5}" maxlength="5" autocomplete="off" spellcheck="false" aria-describedby="num-hint" value="00000">
+            <button type="button" class="icon-btn" id="random" aria-label="Otro número al azar" data-i18n-attr="aria-label:hero.random;title:hero.random" title="Otro número al azar">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7h3.5c4 0 6.5 10 11 10H21"></path><path d="M3 17h3.5c1.6 0 2.9-1.6 4-3.6"></path><path d="M13.5 10.6c1.1-2 2.4-3.6 4-3.6H21"></path><path d="M18 4l3 3-3 3"></path><path d="M18 14l3 3-3 3"></path></svg>
+            </button>
+          </div>
+          <div class="hint" id="num-hint" data-i18n="hero.inputHint">Cinco cifras, del 00000 al 99999</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="box" aria-labelledby="t-pos">
+      <div class="head">
+        <h2 id="t-pos" data-i18n="pos.title">Dónde está tu número</h2>
+        <p class="lead" data-i18n="pos.lead"></p>
+      </div>
+      <div class="pos-layout">
+        <div class="cell grid-wrap"><canvas id="grid" role="img" aria-label=""></canvas></div>
+        <div class="pos-meta">
+          <div class="cell">
+            <div class="where" id="where"></div>
+            <p class="fact" id="copies"></p>
+          </div>
+          <div class="cell">
+            <h3 data-i18n="pos.near">Tus vecinos</h3>
+            <div class="near" id="near"></div>
+            <p class="note" data-i18n="pos.nearNote"></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Layer 2 · the odds, felt -->
+    <section class="box" aria-labelledby="t-scale" id="escala">
+      <div class="head">
+        <h2 id="t-scale" data-i18n="scale.title">La probabilidad, a escala</h2>
+        <p class="lead" data-i18n="scale.lead"></p>
+      </div>
+      <div class="controls">
+        <div>
+          <div class="ctl-label" data-i18n="scale.pick" id="l-scale">Escala</div>
+          <div class="seg scales" role="group" aria-labelledby="l-scale">
+            <button type="button" data-scale="arroz" aria-pressed="true" data-i18n="scale.arroz">Arroz</button>
+            <button type="button" data-scale="estadio" aria-pressed="false" data-i18n="scale.estadio">Estadio</button>
+            <button type="button" data-scale="acera" aria-pressed="false" data-i18n="scale.acera">Acera</button>
+            <button type="button" data-scale="ciudad" aria-pressed="false" data-i18n="scale.ciudad">Ciudad</button>
+          </div>
+        </div>
+        <div>
+          <div class="ctl-label" data-i18n="scale.prize" id="l-prize">Premio</div>
+          <div class="seg prizes" role="group" aria-labelledby="l-prize">
+            <button type="button" data-family="gordo" aria-pressed="true" data-i18n="prize.gordo">El Gordo</button>
+            <button type="button" data-family="pedrea" aria-pressed="false" data-i18n="prize.pedrea">Pedrea</button>
+            <button type="button" data-family="reintegro" aria-pressed="false" data-i18n="prize.reintegro">Reintegro</button>
+          </div>
+        </div>
+      </div>
+      <div class="scale-layout">
+        <div class="cell stage"><canvas id="scale" role="img" aria-label=""></canvas></div>
+        <div>
+          <p class="caption" id="caption" aria-live="polite"></p>
+          <div class="lupa">
+            <canvas id="lupa" role="img" aria-label="Lupa sobre tu número" data-i18n-attr="aria-label:scale.lupa"></canvas>
+            <p class="fact" id="fact"></p>
+          </div>
+          <p class="note" data-i18n="scale.sim"></p>
+          <p class="note" data-i18n="scale.bigger"></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="box" aria-labelledby="t-sum">
+      <div class="head"><h2 id="t-sum" data-i18n="sum.title">Las cuentas de un décimo</h2></div>
+      <div class="sums">
+        <div class="cell sum reintegro"><b id="s-any"></b><span data-i18n="sum.any"></span></div>
+        <div class="cell sum pedrea"><b id="s-more"></b><span data-i18n="sum.more"></span></div>
+        <div class="cell sum gordo"><b id="s-ev"></b><span data-i18n="sum.ev"></span></div>
+      </div>
+      <p class="lead" data-i18n="sum.note"></p>
+    </section>
+
+    <section class="box" aria-labelledby="t-soon">
+      <h2 id="t-soon" data-i18n="soon.title" class="h-small">Próximamente</h2>
+      <p class="fact" data-i18n="soon.list"></p>
+    </section>
+
+    <section class="box help" aria-labelledby="t-honest">
+      <h2 id="t-honest" data-i18n="honest.title" class="h-small">Para que quede claro</h2>
+      <p class="fact" data-i18n="honest.text"></p>
+      <p class="fact" data-i18n="help.text"></p>
+      <ul>
+        <li><a id="help-official" href="https://www.jugarbien.es/" rel="noopener" data-i18n="help.official">Jugar Bien</a></li>
+        <li><a id="help-phone" href="tel:900200225"></a></li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <a href="creditos.html" id="to-credits" data-i18n="foot.credits">Créditos y fuentes</a>
+    <a href="https://ko-fi.com/lessane" rel="noopener" id="kofi">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h13v6a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5V8z"></path><path d="M17 10h1.5a2.5 2.5 0 0 1 0 5H17"></path><path d="M8 3v2M12 3v2"></path></svg>
+      <span data-i18n="foot.kofi">Invítame a un café</span>
+    </a>
+    <span data-i18n="foot.privacy">Sin anuncios, sin cookies, sin rastreo.</span>
+    <a href="https://lessane.es/" data-i18n="foot.by">Un experimento de lessane.es</a>
+  </footer>
+</div>
+</body>
+</html>
