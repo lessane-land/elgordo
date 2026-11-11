@@ -40,8 +40,12 @@ export const FAMILIES = {
 // From tests/odds.test.mjs (2,000 simulated draws with the table above).
 // Numbers with any prize, and numbers that win more than they cost.
 export const SIMULATED = {
-  anyPrize: 0.138,      // about 13.8 %
-  moreThanPrice: 0.038, // about 3.8 %
+  anyPrize: 0.138,      // about 13.8 % · tests/odds.test.mjs
+  moreThanPrice: 0.052, // about 5.2 % (counts 100 euro + reintegro wins) · tests/odds.test.mjs
+  friends: { nothing: 86, back: 9, more: 5 }, // of 100 decimos, rounded to 100
+  friendsMedian: 720,   // typical total for 100 decimos (euros)
+  friendsMean: 1400,    // average total = 100 x expectedValue()
+  groupGordoOdds: 1000, // a group of 100 numbers holds the Gordo 1 time in 1000
 };
 
 // Tax: gravamen especial, 20 % over the first 40,000 euros of each decimo.

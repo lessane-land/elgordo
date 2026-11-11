@@ -4,21 +4,26 @@ The odds of Spain's Christmas lottery (Sorteo Extraordinario de Navidad, 22 Dece
 
 This is about understanding chance, not encouraging anyone to play. No number is "due", there are no strategies, and the lottery pays back less than it takes in.
 
-## Layers
+Live experiment at a lessane.es subdomain.
 
-1. **Your ticket.** Type a number or ask for a random one, see it in the drum and among all 100,000 numbers. Live.
-2. **The odds, felt.** El Gordo, the pedrea and the reintegro drawn as rice, stadium seats, paving tiles and people. Live.
-3. What is more likely than El Gordo. Coming.
-4. The money: prizes, tax, what comes back. Coming.
-5. History. Coming.
-6. On the day: only if an open, allowed official source exists.
+## What it is
+
+One quiet scroll, drawn on a canvas, no video and no music:
+
+1. Rice falls like snow and gathers into the drum. Type your number, or take a random one.
+2. The camera starts on your orange grain and pulls back until it is lost in 2.1 kg of rice, 100,000 grains, one per number.
+3. A stadium lights up and goes dark except one seat: yours.
+4. "Ni de coña." A small perfume parody: Ilusión, Eau de Décimo, 20 euros, your number on the label.
+5. The maths, told with 100 friends: 86 win nothing, 9 get their money back, 5 win a bit more, none wins the Gordo. You pay 2,000 euros and normally get about 720 back.
+
+Then the honesty line, the official help line (Jugar Bien and FEJAR), credits, and a Ko-fi link.
 
 ## How it is built
 
 - No build step. Plain HTML, CSS and ES modules, served by GitHub Pages.
-- `assets/js/data.js` holds every figure with the id of its source. `creditos.html` lists the sources.
-- `assets/js/i18n.js` holds every visible string in both languages.
-- `assets/js/scales.js` fills each silhouette with exactly 100,000 cells, so cell *i* is always number *i*.
+- `assets/js/strings.js` holds every visible string in both languages.
+- `assets/js/data.js` holds every figure next to the id of its source. `creditos.html` lists the sources.
+- `assets/js/film.js` draws the scroll story on one canvas. `assets/js/credits.js` builds the credits page.
 - Fonts are self-hosted (SIL OFL 1.1). No cookies, analytics, ads, or third-party requests.
 
 ## Check the figures
@@ -27,7 +32,7 @@ This is about understanding chance, not encouraging anyone to play. No number is
 npm test
 ```
 
-Re-runs the prize maths and a draw simulation against the values the page shows.
+Re-derives the prize maths, the tax, and the 100-friends numbers from the prize table with a seeded simulation, and fails if the copy drifts.
 
 ## Run locally
 
