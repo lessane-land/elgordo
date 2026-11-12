@@ -63,17 +63,6 @@ export const SCALES = {
     gramsPer1000: 21,                 // milled medium-grain rice · src: uspto
     get totalKg() { return SORTEO.numbers * this.gramsPer1000 / 1000 / 1000; }, // 2.1
   },
-  estadio: {
-    seats: 104000,                    // Spotify Camp Nou when finished · src: fcb
-  },
-  acera: {
-    tileM: 0.20,                      // 20 x 20 cm paving · src: zaragoza
-    widthM: 2,                        // our hypothesis, stated on the page
-    get lengthM() { return SORTEO.numbers * this.tileM * this.tileM / this.widthM; }, // 2,000
-  },
-  ciudad: {
-    name: 'Lugo',                     // over 100,000 residents on 1 Jan 2025 · src: xunta
-  },
 };
 
 export const HELP = {
@@ -94,9 +83,6 @@ export const SOURCES = [
   { id: 'deia', title: 'Tributación de los premios del Sorteo de Navidad', who: 'Deia, con datos de la Agencia Tributaria', url: 'https://www.deia.eus/loteria-de-navidad/2025/12/22/premios-sorteo-loteria-navidad-premio-10500737.html' },
   { id: 'ventas', title: 'Ventas del Sorteo de Navidad 2025', who: 'Noticias de Navarra, con datos de SELAE', url: 'https://www.noticiasdenavarra.com/loteria-de-navidad/2025/12/22/cobrar-premios-sorteo-loteria-navidad-sorteo-10500909.html' },
   { id: 'uspto', title: 'Rice cultivar M-210 (peso de 1.000 granos de arroz blanco)', who: 'USPTO', url: 'https://image-ppubs.uspto.gov/dirsearch-public/print/downloadPdf/10624292' },
-  { id: 'fcb', title: 'El Spotify Camp Nou acogerá la final de la Champions 2029', who: 'FC Barcelona', url: 'https://www.fcbarcelona.es/es/club/noticias/4576674/el-spotify-camp-nou-acogera-la-final-de-la-champions-league-de-futbol-masculina-2029' },
-  { id: 'zaragoza', title: 'Modelario de planos: firme con acera de baldosa', who: 'Ayuntamiento de Zaragoza', url: 'https://www.zaragoza.es/contenidos/grandesproyectos/modelario25/H-1-2025.pdf' },
-  { id: 'xunta', title: 'Galicia continúa incrementando su población', who: 'Xunta de Galicia, con datos del IGE', url: 'https://www.xunta.gal/notas-de-prensa/-/nova/020528/galicia-continua-incrementando-poblacion-con-casi-6-000-habitantes-mas-primer' },
   { id: 'consumo', title: 'Juego responsable y juego seguro', who: 'Consumo Responde', url: 'https://www.consumoresponde.es/node/255087' },
   { id: 'cridj', title: 'Juego patológico: dónde recibir ayuda', who: 'Comunidad de Madrid, CRIDJ', url: 'https://Comunidad.madrid/sites/default/files/doc/juventud/cridj-juego_patologico.pdf' },
   { id: 'selae-footer', title: 'Enlaces de juego seguro', who: 'Loterías y Apuestas del Estado', url: 'https://www.loteriasyapuestas.es/es/paginas-informativas/loteria-de-navidad-2014' },

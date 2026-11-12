@@ -18,7 +18,12 @@
 <canvas id="c" aria-hidden="true"></canvas>
 <header class="top">
   <a class="brand" href="./" data-k="brand">El Gordo</a>
+  <div class="ctl">
+  <button type="button" class="snd" id="sound" aria-pressed="false">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V6l10-2v12"></path><circle cx="6.5" cy="18" r="2.5"></circle><circle cx="16.5" cy="16" r="2.5"></circle><path class="off" d="M3 3l18 18"></path></svg>
+  </button>
   <div class="lang" role="group" aria-label="Idioma"><button type="button" data-lang="es" aria-pressed="true">ES</button><button type="button" data-lang="en" aria-pressed="false">EN</button></div>
+  </div>
 </header>
 
 <main id="film" aria-label="">
@@ -43,12 +48,9 @@
   <div class="layer low" data-a="0.41" data-b="0.465"><p class="big" data-k="c2"></p></div>
   <div class="layer low" data-a="0.53" data-b="0.62"><p class="big" data-k="c3"></p><p class="aside" data-k="c4"></p></div>
   <div class="layer" data-a="0.31" data-b="0.62" style="top: 64px; text-align: left"><div class="counter" id="counter"></div></div>
-  <!-- IV · stadium of lights -->
-  <div class="layer high" data-a="0.64" data-b="0.72"><div class="chap" data-k="ch4"></div><p class="big" style="margin-top:16px" data-k="d1"></p></div>
-  <div class="layer low bare" data-a="0.73" data-b="0.81"><p class="big" data-k="d2"></p><p class="aside" data-k="d3"></p></div>
-  <!-- V · the punchline -->
-  <div class="layer mid" data-a="0.82" data-b="0.89"><div class="chap" style="margin-bottom:22px" data-k="ch5"></div><p class="huge" data-k="e1"></p><p class="mid-t cham" style="margin-top:22px" data-k="e2"></p></div>
-  <div class="layer mid" data-a="0.895" data-b="0.985">
+  <!-- IV · the punchline -->
+  <div class="layer mid" data-a="0.63" data-b="0.70"><div class="chap" style="margin-bottom:22px" data-k="ch4"></div><p class="huge" data-k="e1"></p><p class="mid-t cham" style="margin-top:22px" data-k="e2"></p></div>
+  <div class="layer mid" data-a="0.705" data-b="0.80">
     <svg class="flacon" width="150" height="230" viewBox="0 0 150 230" role="img" id="flaconSvg">
       <g fill="none" stroke="#F3E3BF" stroke-width="1.2">
         <rect x="56" y="8" width="38" height="30" rx="2"></rect>
@@ -74,7 +76,7 @@
     <div class="stick">
       <div class="wrap fr-wrap">
         <div>
-          <div class="chap" data-k="ch6"></div>
+          <div class="chap" data-k="ch5"></div>
           <p class="big fr-title" data-k="g0"></p>
           <div class="fr-steps">
             <p class="fr-step mid-t" data-step="0" data-k="g1"></p>
@@ -96,6 +98,16 @@
       </div>
     </div>
   </div>
+</section>
+
+<section class="xmas" id="xmas">
+  <div>
+    <p class="huge" data-k="x1"></p>
+    <p class="mid-t cham" style="margin-top:22px" data-k="x2"></p>
+  </div>
+</section>
+
+<section class="after tail">
   <div class="wrap">
     <div class="calm">
       <div data-k="h0"></div>

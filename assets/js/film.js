@@ -1,4 +1,5 @@
 import { S, pickLang, nf as nfmt, applyText } from './strings.js';
+import { createMusicBox } from './music.js';
 
 /* ---------------- language ---------------- */
 let lang = pickLang();
@@ -10,9 +11,20 @@ function applyLang() {
   document.getElementById('bars').setAttribute('aria-label', S[lang].bars);
   document.getElementById('flaconSvg').setAttribute('aria-label', S[lang].flacon);
   document.querySelectorAll('.bar b').forEach((el, i) => { el.textContent = nf(i ? 720 : 2000, { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }); });
+  document.getElementById('sound').setAttribute('aria-label', S[lang].sound);
+  document.getElementById('sound').title = S[lang].sound;
   const cred = document.getElementById('toCred'); if (cred) cred.href = 'creditos.html?lang=' + lang;
 }
 document.querySelectorAll('[data-lang]').forEach((b) => b.addEventListener('click', () => { lang = b.dataset.lang; applyLang(); }));
+
+/* ---------------- music: off until asked ---------------- */
+const music = createMusicBox();
+const soundBtn = document.getElementById('sound');
+soundBtn.addEventListener('click', () => {
+  if (music.on) music.stop(); else music.start();
+  soundBtn.setAttribute('aria-pressed', String(music.on));
+});
+document.addEventListener('visibilitychange', () => { if (document.hidden && music.on) { music.stop(); soundBtn.setAttribute('aria-pressed', 'false'); } });
 
 /* ---------------- state ---------------- */
 const N = 100000;
@@ -33,7 +45,7 @@ function resize() {
   DPR = Math.min(window.devicePixelRatio || 1, 2);
   W = innerWidth; H = innerHeight;
   cv.width = Math.round(W * DPR); cv.height = Math.round(H * DPR);
-  pileCache = null; stadiumCache = null;
+  pileCache = null;
 }
 addEventListener('resize', resize);
 
@@ -71,11 +83,49 @@ function drawFore(alpha) {
   }
   ctx.globalAlpha = 1;
 }
-function grain(x, y, len, ang, fill, sheen) {
+// Lighter and darker versions of a grain colour, for shading.
+const TONES = new Map();
+function tone(hex) {
+  let t = TONES.get(hex);
+  if (!t) {
+    const n = parseInt(hex.slice(1), 16), r = n >> 16, g = (n >> 8) & 255, b = n & 255;
+    const mix = (k, to) => `rgb(${Math.round(r + (to - r) * k)},${Math.round(g + (to - g) * k)},${Math.round(b + (to - b) * k)})`;
+    t = { hi: mix(0.5, 255), lo: mix(0.55, 16) };
+    TONES.set(hex, t);
+  }
+  return t;
+}
+// One grain of rice. Small ones are plain ellipses; big ones (rich) get a real
+// grain outline, shading lit from above, a contact shadow and a moving glint.
+function grain(x, y, len, ang, fill, rich) {
   const c = Math.cos(ang), sn = Math.sin(ang);
+  if (!rich || len <= 18) {
+    ctx.setTransform(DPR * c, DPR * sn, -DPR * sn, DPR * c, DPR * x, DPR * y);
+    ctx.fillStyle = fill; ctx.beginPath(); ctx.ellipse(0, 0, len / 2, len / 5, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    return;
+  }
+  const w = len * 0.2, a0 = ctx.globalAlpha;
+  const outline = () => {
+    ctx.beginPath(); ctx.moveTo(-len * 0.5, 0);
+    ctx.bezierCurveTo(-len * 0.44, -w * 1.2, len * 0.28, -w * 1.12, len * 0.5, -w * 0.12);
+    ctx.bezierCurveTo(len * 0.53, w * 0.55, len * 0.2, w * 1.08, -len * 0.24, w * 0.98);
+    ctx.bezierCurveTo(-len * 0.42, w * 0.9, -len * 0.52, w * 0.45, -len * 0.5, 0);
+    ctx.closePath();
+  };
+  ctx.setTransform(DPR * c, DPR * sn, -DPR * sn, DPR * c, DPR * (x + len * 0.05), DPR * (y + len * 0.07));
+  ctx.globalAlpha = a0 * 0.4; ctx.fillStyle = '#000000'; outline(); ctx.fill();
   ctx.setTransform(DPR * c, DPR * sn, -DPR * sn, DPR * c, DPR * x, DPR * y);
-  ctx.fillStyle = fill; ctx.beginPath(); ctx.ellipse(0, 0, len / 2, len / 5, 0, 0, Math.PI * 2); ctx.fill();
-  if (sheen && len > 18) { const ga0 = ctx.globalAlpha; ctx.globalAlpha = ga0 * (0.12 + 0.5 * Math.max(0, Math.cos(ang - LIGHT)) ** 6); ctx.fillStyle = '#FFFFFF'; ctx.beginPath(); ctx.ellipse(-len * 0.08, -len * 0.065, len * 0.28, len * 0.045, 0, 0, Math.PI * 2); ctx.fill(); ctx.globalAlpha = ga0; }
+  ctx.globalAlpha = a0;
+  const lx = -sn, ly = -c, r = w * 1.2 + Math.abs(lx) * (len * 0.5 - w); // "up" on screen, in the grain's own axes
+  const g = ctx.createLinearGradient(lx * r, ly * r, -lx * r, -ly * r), t = tone(fill);
+  g.addColorStop(0, t.hi); g.addColorStop(0.45, fill); g.addColorStop(1, t.lo);
+  ctx.fillStyle = g; outline(); ctx.fill();
+  ctx.fillStyle = '#FFFFFF';
+  ctx.globalAlpha = a0 * 0.14; ctx.beginPath(); ctx.ellipse(len * 0.02, w * 0.05, len * 0.27, w * 0.5, 0, 0, Math.PI * 2); ctx.fill();
+  ctx.globalAlpha = a0 * (0.18 + 0.6 * Math.max(0, Math.cos(ang - LIGHT)) ** 6);
+  ctx.beginPath(); ctx.ellipse(lx * len * 0.1, ly * w * 0.5, len * 0.24, w * 0.15, 0, 0, Math.PI * 2); ctx.fill();
+  ctx.globalAlpha = a0;
   ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
 }
 
@@ -105,41 +155,11 @@ function pileBitmap(z) {
   pileCache = off; pileCacheZ = z; return off;
 }
 
-/* ---------- the stadium: 100,000 seats ---------- */
-const seats = { x: new Float32Array(N), y: new Float32Array(N) };
-(() => {
-  const rows = 120, rx0 = 0.30, ry0 = 0.15, rx1 = 0.49, ry1 = 0.30;
-  const len = []; let tot = 0;
-  for (let r = 0; r < rows; r++) { const t = r / (rows - 1); const l = Math.PI * 2 * Math.sqrt(((rx0 + (rx1 - rx0) * t) ** 2 + (ry0 + (ry1 - ry0) * t) ** 2) / 2); len.push(l); tot += l; }
-  let i = 0;
-  for (let r = 0; r < rows; r++) {
-    const t = r / (rows - 1), k = r === rows - 1 ? N - i : Math.round(N * len[r] / tot);
-    const rx = rx0 + (rx1 - rx0) * t, ry = ry0 + (ry1 - ry0) * t, gap = (r % 30 === 29) ? 1 : 0;
-    for (let j = 0; j < k && i < N; j++) {
-      const a = (j / k) * Math.PI * 2 + r * 0.013;
-      seats.x[i] = rx * Math.cos(a); seats.y[i] = ry * Math.sin(a) + gap * 0.004; i++;
-    }
-  }
-})();
-let stadiumCache = null;
-const BULBS = Array.from({ length: 1400 }, () => (rand() * N) | 0);
-function stadiumBitmaps(scale) {
-  if (stadiumCache && stadiumCache.scale === scale) return stadiumCache;
-  const mk = (color) => {
-    const off = document.createElement('canvas'); off.width = cv.width; off.height = cv.height;
-    const o = off.getContext('2d'); o.fillStyle = color;
-    const cx = W / 2 * DPR, cy = H * 0.52 * DPR, s = scale * DPR, d = Math.max(0.8, 0.9 * DPR * scale / 900);
-    for (let i = 0; i < N; i++) o.fillRect(cx + seats.x[i] * s, cy + seats.y[i] * s, d, d);
-    return off;
-  };
-  stadiumCache = { scale, dim: mk('#1A2338'), lit: mk(C.champ), lit2: mk('#FFD9A0') };
-  return stadiumCache;
-}
-
 /* ---------------- scroll ---------------- */
 const film = document.getElementById('film');
 let P = 0;
-function progress() { const max = film.offsetHeight - innerHeight; return Math.min(1, Math.max(0, scrollY / max)); }
+const END = 0.81; // the film's timeline runs from 0 to END
+function progress() { const max = film.offsetHeight - innerHeight; return END * Math.min(1, Math.max(0, scrollY / max)); }
 const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 const ease = (t) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 const span = (p, a, b) => clamp((p - a) / (b - a));
@@ -165,6 +185,7 @@ function updateLayers(p) {
 
 /* ---------------- scenes ---------------- */
 let T = 0, LIGHT = 0;
+const xmas = document.getElementById('xmas');
 function drawSnow(p, alpha, gather) {
   const R = Math.min(W * 0.36, H * 0.2), cx = W / 2, cy = H * 0.66, rot = T * 0.00012 + p * 3;
   for (const s of SNOW) {
@@ -229,7 +250,9 @@ function drawPile(p, alpha) {
   const z = Math.exp(Math.log(z0) + (Math.log(zFit) - Math.log(z0)) * q);
   const camT = clamp((Math.log(z0) - Math.log(z)) / (Math.log(z0) - Math.log(zFit)));
   const yx = gx[you], yy = gy[you];
-  const camX = yx + (PW / 2 - yx) * Math.pow(camT, 2.2), camY = yy + (PH * 0.55 - yy) * Math.pow(camT, 2.2);
+  // stay on your grain until the whole pile is nearly in view, then drift to its centre
+  const drift = Math.pow(clamp((zFit * 4 - z) / (zFit * 3)), 2);
+  const camX = yx + (PW / 2 - yx) * drift, camY = yy + (PH * 0.55 - yy) * drift;
   const oy0 = H * (0.36 + 0.06 * (1 - camT)); const ox = W / 2 - camX * z, oy = oy0 - camY * z;
   ctx.globalAlpha = alpha;
   const len = GL * z;
@@ -253,7 +276,8 @@ function drawPile(p, alpha) {
         for (let k = 0; k < m; k++) { const i = vis[k]; if (gs[i] !== sh) continue; ctx.fillRect(ox + gx[i] * z - len * 0.35, oy + gy[i] * z - len * 0.12, len * 0.7, Math.max(1, len * 0.24)); }
       }
     } else {
-      for (let k = 0; k < m; k++) { const i = vis[k]; grain(ox + gx[i] * z, oy + gy[i] * z, len, ga[i], C.grain[gs[i]], true); }
+      const rich = m < 900; // full drawing only while few grains are in view
+      for (let k = 0; k < m; k++) { const i = vis[k]; grain(ox + gx[i] * z, oy + gy[i] * z, len, ga[i], C.grain[gs[i]], rich); }
     }
   }
   const px = ox + yx * z, py = oy + yy * z;
@@ -266,48 +290,6 @@ function drawPile(p, alpha) {
   }
   ctx.globalAlpha = 1;
   lastCount = drawn;
-}
-
-function drawStadium(p, alpha) {
-  const scale = Math.min(W * 1.02, H * 1.45);
-  const b = stadiumBitmaps(scale);
-  const wave = ease(span(p, 0.62, 0.71));
-  const off = ease(span(p, 0.735, 0.79));
-  ctx.globalAlpha = alpha; ctx.setTransform(1, 0, 0, 1, 0, 0);
-  ctx.drawImage(b.dim, 0, 0);
-  if (wave > 0 && off < 1) {
-    ctx.save();
-    const cx = W / 2 * DPR, cy = H * 0.52 * DPR;
-    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.arc(cx, cy, Math.max(cv.width, cv.height), -Math.PI / 2, -Math.PI / 2 + wave * Math.PI * 2); ctx.closePath(); ctx.clip();
-    const flick = reduce ? 1 : 0.86 + 0.14 * Math.sin(T * 0.006);
-    ctx.globalAlpha = alpha * (1 - off) * flick; ctx.drawImage(b.lit, 0, 0);
-    if (!reduce) { ctx.globalAlpha = alpha * (1 - off) * (0.5 + 0.5 * Math.sin(T * 0.004)); ctx.drawImage(b.lit2, 0, 0); }
-    ctx.restore();
-  }
-  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-  if (wave > 0 && off < 1 && !reduce) {
-    const lim = wave * Math.PI * 2;
-    for (let k = 0; k < BULBS.length; k++) {
-      const i = BULBS[k];
-      let a = Math.atan2(seats.y[i], seats.x[i]) + Math.PI / 2; if (a < 0) a += Math.PI * 2;
-      if (a > lim) continue;
-      const tw = 0.5 + 0.5 * Math.sin(T * 0.004 + k * 2.399);
-      ctx.globalAlpha = alpha * (1 - off) * tw * tw;
-      ctx.fillStyle = k % 5 === 0 ? '#FFFFFF' : C.champ;
-      const bxp = W / 2 + seats.x[i] * scale, byp = H * 0.52 + seats.y[i] * scale;
-      ctx.fillRect(bxp - 1, byp - 1, 2.2, 2.2);
-    }
-  }
-  ctx.globalAlpha = alpha * 0.7; ctx.strokeStyle = '#D8C49A'; ctx.lineWidth = 0.8;
-  const cx = W / 2, cy = H * 0.52;
-  ctx.beginPath(); ctx.ellipse(cx, cy, scale * 0.2, scale * 0.09, 0, 0, Math.PI * 2); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(cx, cy - scale * 0.09); ctx.lineTo(cx, cy + scale * 0.09); ctx.stroke();
-  ctx.beginPath(); ctx.ellipse(cx, cy, scale * 0.03, scale * 0.014, 0, 0, Math.PI * 2); ctx.stroke();
-  const i = you;
-  const sx = cx + seats.x[i] * scale, sy = cy + seats.y[i] * scale;
-  ctx.globalAlpha = alpha; ctx.fillStyle = C.or; ctx.fillRect(sx - 2, sy - 2, 4, 4);
-  if (off > 0.3) { ctx.strokeStyle = C.or; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.arc(sx, sy, 12, 0, Math.PI * 2); ctx.stroke(); }
-  ctx.globalAlpha = 1;
 }
 
 function frame(now) {
@@ -325,10 +307,13 @@ function frame(now) {
   }
   const cIn = span(p, 0.28, 0.31) * (1 - span(p, 0.6, 0.63));
   if (cIn > 0) { drawPile(p, cIn); drawFore(cIn * (1 - span(p, 0.3, 0.4)) * 0.8); }
-  const dIn = span(p, 0.615, 0.64) * (1 - span(p, 0.795, 0.82));
-  if (dIn > 0) drawStadium(p, dIn);
-  const eIn = span(p, 0.82, 0.86);
-  if (eIn > 0) { drawSnow(p, eIn * 0.35, 0); drawFore(eIn * 0.7); }
+  // after the pile: quiet snow, which brightens again for the Christmas ending
+  const eIn = span(p, 0.63, 0.67);
+  if (eIn > 0) {
+    const r = xmas.getBoundingClientRect();
+    const x = clamp(1 - Math.abs(r.top + r.height / 2 - innerHeight / 2) / innerHeight);
+    drawSnow(p, eIn * (0.35 + 0.6 * x), 0); drawFore(eIn * 0.7);
+  }
   updateLayers(p);
   document.getElementById('counter').innerHTML = `<b>${nf(Math.max(1, lastCount))}</b> ${S[lang].counter}`;
   requestAnimationFrame(frame);

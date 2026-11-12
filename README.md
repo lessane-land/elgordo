@@ -8,13 +8,14 @@ Live experiment at a lessane.es subdomain.
 
 ## What it is
 
-One quiet scroll, drawn on a canvas, no video and no music:
+One quiet scroll, drawn on a canvas. No video. Optional music box (Silent Night, public domain, synthesised, off by default):
 
 1. Rice falls like snow and gathers into the drum. Type your number, or take a random one.
 2. The camera starts on your orange grain and pulls back until it is lost in 2.1 kg of rice, 100,000 grains, one per number.
-3. A stadium lights up and goes dark except one seat: yours.
-4. "Ni de coña." A small perfume parody: Ilusión, Eau de Décimo, 20 euros, your number on the label.
-5. The maths, told with 100 friends: 86 win nothing, 9 get their money back, 5 win a bit more, none wins the Gordo. You pay 2,000 euros and normally get about 720 back.
+3. "Ni de coña." A small perfume parody: Ilusión, Eau de Décimo, 20 euros, your number on the label.
+4. The maths, told with 100 friends: 86 win nothing, 9 get their money back, 5 win a bit more, none wins the Gordo. You pay 2,000 euros and normally get about 720 back.
+
+5. Merry Christmas, and what Spain says every 22nd: what matters is your health.
 
 Then the honesty line, the official help line (Jugar Bien and FEJAR), credits, and a Ko-fi link.
 

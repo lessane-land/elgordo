@@ -22,7 +22,6 @@ assert.equal(netPrize(20000), 20000);
 
 /* ---------- scales ---------- */
 assert.equal(SCALES.arroz.totalKg, 2.1);
-assert.equal(SCALES.acera.lengthM, 2000);
 
 /* ---------- the 100 friends breakdown is internally consistent ---------- */
 const f = SIMULATED.friends;
